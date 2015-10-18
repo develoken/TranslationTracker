@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database.cs" />
+    <Compile Include="DirectoryHelper.cs" />
     <Compile Include="ExcelReader.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="MainWindow.cs">

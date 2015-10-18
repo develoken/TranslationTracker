@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Excel;
 
 namespace TranslationTracker
 {
-    public class ExcelReader
+    public class ExcelReader : IDisposable
     {
         private Application application;
+        private Workbook workbook;
 
         private static volatile ExcelReader instance;
         private static object syncRoot = new Object();
@@ -18,6 +20,20 @@ namespace TranslationTracker
         private ExcelReader() 
         {
             application = new Application();
+        }
+
+        public void Dispose()
+        {
+            if (workbook != null)
+            {
+                workbook.Close();
+            }
+            if (application != null)
+            {
+                application.Quit();
+            }
+            Marshal.FinalReleaseComObject(workbook);
+            Marshal.FinalReleaseComObject(application);
         }
         
         public static ExcelReader Instance
@@ -35,62 +51,70 @@ namespace TranslationTracker
                 return instance;
             }
         }
-
-        public IEnumerable<Tuple<string, string>> Load(string filePath, string searchString)
+        
+        public IEnumerable<List<string>> Load(string rootPath, string searchString)
         {
-            List<Tuple<string, string>> list = new List<Tuple<string, string>>();
-            StringBuilder first = new StringBuilder();
-            StringBuilder second = new StringBuilder();
-
-            Workbook workbook = application.Workbooks.Open(filePath);
-            try
+            foreach (string filePath in DirectoryHelper.Instance.FindXlsFiles(rootPath))
             {
-                foreach (Worksheet worksheet in workbook.Worksheets)
+                foreach (List<string> list in LoadFromFile(filePath, searchString))
                 {
-                    int col = worksheet.UsedRange.Columns.Count;
-                    int row = worksheet.UsedRange.Rows.Count;
-
-                    for (int i = 1; i <= row; i++)
-                    {
-                        first.Clear();
-                        second.Clear();
-
-                        for (int j = 1; j <= col; j++)
-                        {
-                            var value = worksheet.Cells[i, j].Value;
-
-                            if (value != null)
-                            {
-                                string stringValue = value.ToString();
-                                if (stringValue.Contains(searchString))
-                                {
-                                    if (first.Length == 0)
-                                    {
-                                        first.Insert(0, stringValue);
-                                    }
-                                }
-                                else if (first.Length != 0 && second.Length == 0)
-                                {
-                                    second.Insert(0, stringValue);
-                                    yield return new Tuple<string, string>(first.ToString(), second.ToString());
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    Marshal.ReleaseComObject(worksheet);
+                    yield return list;
                 }
-            }
-            finally
-            {
-                workbook.Close();
             }
         }
 
+        private IEnumerable<List<string>> LoadFromFile(string filePath, string searchString)
+        {
+            if (File.Exists(filePath))
+            {
+                bool found = false;
+                List<string> list = new List<string>();
+                try
+                {
+                    workbook = application.Workbooks.Open(filePath);
+
+                    foreach (Worksheet worksheet in workbook.Worksheets)
+                    {
+                        for (int i = 1; i <= worksheet.UsedRange.Rows.Count; i++)
+                        {
+                            found = false;
+                            list.Clear();
+
+                            for (int j = 1; j <= worksheet.UsedRange.Columns.Count; j++)
+                            {
+                                var value = worksheet.Cells[i, j].Value;
+
+                                if (value != null)
+                                {
+                                    string stringValue = value.ToString();
+                                    list.Add(stringValue);
+
+                                    if (stringValue.Contains(searchString))
+                                    {
+                                        found = true;
+                                    }
+                                }
+                            }
+
+                            if (found)
+                            {
+                                yield return list;
+                            }
+                        }
+                        Marshal.FinalReleaseComObject(worksheet);
+                    }
+                }
+                finally
+                {
+                    Marshal.FinalReleaseComObject(workbook.Worksheets);
+                    if (workbook != null)
+                    {
+                        workbook.Close();
+                    }
+                    Marshal.FinalReleaseComObject(workbook);
+                    GC.Collect();
+                }
+            }
+        }
     }
 }

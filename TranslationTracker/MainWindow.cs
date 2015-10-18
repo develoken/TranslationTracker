@@ -17,31 +17,49 @@ namespace TranslationTracker
         {
             InitializeComponent();
         }
-
-        private void btnSearch_Click(object sender, EventArgs e)
+        
+        private async void btnSearch_Click(object sender, EventArgs e)
         {
-            string rootPath = tbxDirectory.Text;
-            string searchString = tbxSearchString.Text;
-
-            gridView.Rows.Clear();
-            foreach(string path in Directory.GetFiles(rootPath, "*.xls", SearchOption.AllDirectories))
+            if (string.IsNullOrWhiteSpace(tbxDirectory.Text) ||
+                string.IsNullOrWhiteSpace(tbxSearchString.Text))
             {
-                try
-                {
-                    foreach (Tuple<string, string> item in ExcelReader.Instance.Load(path.Trim(), searchString))
-                    {
-                        DataGridViewRow row = (DataGridViewRow)gridView.Rows[0].Clone();
-                        row.Cells[0].Value = item.Item1;
-                        row.Cells[1].Value = item.Item2;
+                MessageBox.Show("Please specify directory and search string",
+                                "Warning",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+            }
+            else
+            {
+                var task = await PopulateGridView();
+            }
+        }
 
-                        gridView.Rows.Add(row);
-                    }
-                }
-                catch (Exception ex)
+        private async Task<bool> PopulateGridView()
+        {
+            StringBuilder resultString = new StringBuilder();
+            gridView.Rows.Clear();
+
+            try
+            {
+                foreach (List<string> items in ExcelReader.Instance.Load(tbxDirectory.Text, tbxSearchString.Text))
                 {
-                    string temp = ex.Message;
+                    resultString.Clear();
+
+                    DataGridViewRow row = (DataGridViewRow)gridView.Rows[0].Clone();
+                    foreach (string item in items)
+                    {
+                        resultString.Append(item + " ");
+                    }
+                    row.Cells[0].Value = resultString.ToString().Trim();
+                    gridView.Rows.Add(row);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return true;
         }
     }
 }

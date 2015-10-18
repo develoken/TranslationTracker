@@ -41,10 +41,10 @@
             this.tbxDirectory = new System.Windows.Forms.TextBox();
             this.tbxSearchString = new System.Windows.Forms.TextBox();
             this.gridView = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.Korean = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.English = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
@@ -57,7 +57,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(955, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(967, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -72,7 +72,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // helpToolStripMenuItem
@@ -101,11 +101,11 @@
             // lbSearchString
             // 
             this.lbSearchString.AutoSize = true;
-            this.lbSearchString.Location = new System.Drawing.Point(12, 76);
+            this.lbSearchString.Location = new System.Drawing.Point(12, 86);
             this.lbSearchString.Name = "lbSearchString";
-            this.lbSearchString.Size = new System.Drawing.Size(34, 13);
+            this.lbSearchString.Size = new System.Drawing.Size(65, 13);
             this.lbSearchString.TabIndex = 2;
-            this.lbSearchString.Text = "String";
+            this.lbSearchString.Text = "Search Text";
             // 
             // statusStrip1
             // 
@@ -114,7 +114,7 @@
             this.toolStripProgressBar1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 558);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(955, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(967, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -132,16 +132,16 @@
             // 
             // tbxDirectory
             // 
-            this.tbxDirectory.Location = new System.Drawing.Point(68, 44);
+            this.tbxDirectory.Location = new System.Drawing.Point(83, 44);
             this.tbxDirectory.Name = "tbxDirectory";
-            this.tbxDirectory.Size = new System.Drawing.Size(660, 20);
+            this.tbxDirectory.Size = new System.Drawing.Size(681, 20);
             this.tbxDirectory.TabIndex = 5;
             // 
             // tbxSearchString
             // 
-            this.tbxSearchString.Location = new System.Drawing.Point(68, 73);
+            this.tbxSearchString.Location = new System.Drawing.Point(83, 83);
             this.tbxSearchString.Name = "tbxSearchString";
-            this.tbxSearchString.Size = new System.Drawing.Size(660, 20);
+            this.tbxSearchString.Size = new System.Drawing.Size(681, 20);
             this.tbxSearchString.TabIndex = 6;
             // 
             // gridView
@@ -151,57 +151,61 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Korean,
-            this.English});
-            this.gridView.Location = new System.Drawing.Point(12, 99);
+            this.Result});
+            this.gridView.Location = new System.Drawing.Point(15, 124);
             this.gridView.Name = "gridView";
             this.gridView.ReadOnly = true;
-            this.gridView.Size = new System.Drawing.Size(931, 432);
+            this.gridView.Size = new System.Drawing.Size(940, 431);
             this.gridView.TabIndex = 9;
             // 
-            // button1
+            // Result
             // 
-            this.button1.Location = new System.Drawing.Point(734, 41);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Result.HeaderText = "Result";
+            this.Result.Name = "Result";
+            this.Result.ReadOnly = true;
+            this.Result.Width = 62;
             // 
             // btnSearch
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearch.Location = new System.Drawing.Point(815, 40);
+            this.btnSearch.Location = new System.Drawing.Point(799, 78);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(128, 49);
+            this.btnSearch.Size = new System.Drawing.Size(156, 29);
             this.btnSearch.TabIndex = 11;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // Korean
+            // btnBrowse
             // 
-            this.Korean.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Korean.HeaderText = "Korean";
-            this.Korean.Name = "Korean";
-            this.Korean.ReadOnly = true;
-            this.Korean.Width = 66;
+            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowse.Location = new System.Drawing.Point(799, 39);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(75, 29);
+            this.btnBrowse.TabIndex = 12;
+            this.btnBrowse.Text = "Browse";
+            this.btnBrowse.UseVisualStyleBackColor = true;
             // 
-            // English
+            // btnLoad
             // 
-            this.English.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.English.HeaderText = "English";
-            this.English.Name = "English";
-            this.English.ReadOnly = true;
-            this.English.Width = 66;
+            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLoad.Location = new System.Drawing.Point(880, 39);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(75, 29);
+            this.btnLoad.TabIndex = 13;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
+            this.AcceptButton = this.btnSearch;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 580);
+            this.ClientSize = new System.Drawing.Size(967, 580);
+            this.Controls.Add(this.btnLoad);
+            this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.gridView);
             this.Controls.Add(this.tbxSearchString);
             this.Controls.Add(this.tbxDirectory);
@@ -237,10 +241,10 @@
         private System.Windows.Forms.TextBox tbxDirectory;
         private System.Windows.Forms.TextBox tbxSearchString;
         private System.Windows.Forms.DataGridView gridView;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Korean;
-        private System.Windows.Forms.DataGridViewTextBoxColumn English;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.Button btnLoad;
     }
 }
 
